@@ -1,0 +1,1 @@
+-- Script SQL separado para criação do schema 
