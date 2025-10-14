@@ -3,10 +3,15 @@ import os
 from dotenv import load_dotenv
 from psycopg2 import Error
 
+# carrega as variaveis do arquivo .env
+load_dotenv()
+
+senha = os.getenv("senha")
+
 """ 
-psycopg2 : biblioteca para integração do python com o postegres
+psycopg2: Biblioteca para integração do python com o postegres
 os: 
-dotenv: biblioteca que carrega variáveis de ambietne no arquivo .env
+dotenv: Biblioteca que carrega variáveis de ambiente no arquivo .env.
 
 """
 
@@ -15,8 +20,9 @@ def conecta():
     try:
         conn = psycopg2.connect(
             user="postgres",
-            password="root",
+            password= senha,
             host="localhost",
+            port="5432",
             database="database_teste_edu")
     
         print("conectado no postgres com sucesso!!")
@@ -24,7 +30,7 @@ def conecta():
         return conn
     
     except Error as e:
-        print(f"Ocorreu um erro ao tentar conectar ao banco de dados  {e}")
+        print(f"Ocorreu um erro ao tentar conectar                                                                                                                                               ao banco de dados  {e}")
 
 def encerra_conexao(conn):
     if conn:
