@@ -82,6 +82,7 @@ CREATE TYPE tipo_conteudo_enum AS ENUM ('video', 'texto', 'quiz');
 CREATE TABLE aulas(
     aulaID SERIAL PRIMARY KEY,
     moduloID INT NOT NULL,
+    titulo VARCHAR(50) NOT NULL,
     ordem INT NOT NULL,
     duracao_minutos INT NOT NULL,
     tipo tipo_conteudo_enum NOT NULL,
