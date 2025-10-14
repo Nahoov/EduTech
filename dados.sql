@@ -1,5 +1,5 @@
 -- Script SQL com os INSERTs de dados
-INSERT INTO categoria (nome_categoria) VALUES
+INSERT INTO categoria_cursos (nome_categoria) VALUES
 ('Front-end'),
 ('Back-end'),
 ('DevOps'),
