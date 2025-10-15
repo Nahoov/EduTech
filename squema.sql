@@ -2,39 +2,39 @@
 
 CREATE TABLE alunos(
     alunoID SERIAL PRIMARY KEY,
-    nome_aluno VARCHAR(25) NOT NULL,
+    nome_aluno VARCHAR(35) NOT NULL,
     sobrenome_aluno VARCHAR(50) NOT NULL,
-    email VARCHAR(50) UNIQUE NOT NULL,
-    telefone VARCHAR(11),
+    email VARCHAR(80) UNIQUE NOT NULL,
+    telefone VARCHAR(13),
     data_nascimento DATE,
     data_cadastro DATE
 );
 
 CREATE TABLE especialidades(
     especialidadeID SERIAL PRIMARY KEY,
-    nome_especialidade VARCHAR(25) NOT NULL
+    nome_especialidade VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE instrutores(
     instrutorID SERIAL PRIMARY KEY,
-    especialidadeID INT,
-    nome_instrutor VARCHAR(25)NOT NULL,
+    nome_instrutor VARCHAR(30)NOT NULL,
     sobrenome_instrutor VARCHAR(50) NOT NULL,
-    email_instrutor VARCHAR(50) UNIQUE NOT NULL,
+    email_instrutor VARCHAR(80) UNIQUE NOT NULL,
     data_cadastro DATE NOT NULL,
-    biografia VARCHAR(500),
-    FOREIGN KEY(especialidadeID) REFERENCES especialidades(especialidadeID)
+    biografia VARCHAR(500)
 );
 
-CREATE TABLE especialidades_instrutor(
+CREATE TABLE instrutor_especialidades(
     especialidadeID INT NOT NULL,
     instrutorID INT NOT NULL,
     PRIMARY KEY(especialidadeID, instrutorID)
+    FOREIGN KEY (especialidadeID) REFERENCES especialidades(especialidadeID),
+    FOREIGN KEY (instrutorID) REFERENCES instrutores(instrutorID)
 );
 
 CREATE TABLE categoria_cursos(
     categoriaID SERIAL PRIMARY KEY,
-    nome_categoria VARCHAR(25) NOT NULL
+    nome_categoria VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TYPE dificuldade_enum AS ENUM('iniciante','intermediario','avancado');
@@ -43,7 +43,7 @@ CREATE TABLE cursos(
     cursoID SERIAL PRIMARY KEY,
     categoriaID INT NOT NULL,
     instrutorID INT NOT NULL,
-    titulo_curso VARCHAR(100) NOT NULL,
+    titulo_curso VARCHAR(150) NOT NULL UNIQUE,
     carga_horaria INT NOT NULL,
     nivel_dificuldade dificuldade_enum NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
@@ -65,7 +65,8 @@ CREATE TABLE matriculas(
     valor_pago DECIMAL(10,2) NOT NULL,
     certificado_emitido BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY(alunoID) REFERENCES alunos(alunoID),
-    FOREIGN KEY(cursoID) REFERENCES cursos(cursoID)
+    FOREIGN KEY(cursoID) REFERENCES cursos(cursoID),
+    CONSTRAINT unica_matricula_por_aluno UNIQUE (alunoID, cursoID)
 );
 
 CREATE TABLE modulos(
@@ -74,7 +75,8 @@ CREATE TABLE modulos(
     titulo VARCHAR(100) NOT NULL,
     ordem INT NOT NULL,
     descricao VARCHAR(500) NOT NULL,
-    FOREIGN KEY(cursoID) REFERENCES cursos(cursoID)
+    FOREIGN KEY(cursoID) REFERENCES cursos(cursoID),
+    CONSTRAINT ordem_unica_por_curso UNIQUE (cursoID, ordem)
 );
 
 CREATE TYPE tipo_conteudo_enum AS ENUM ('video', 'texto', 'quiz');
@@ -87,7 +89,8 @@ CREATE TABLE aulas(
     duracao_minutos INT NOT NULL,
     tipo tipo_conteudo_enum NOT NULL,
     conteudo BYTEA,
-    FOREIGN KEY(moduloID) REFERENCES modulos(moduloID)
+    FOREIGN KEY(moduloID) REFERENCES modulos(moduloID),
+    CONSTRAINT ordem_unica_por_modulo UNIQUE (moduloID, ordem)
 );
 
 CREATE TYPE avaliacao_enum AS ENUM('extra','comum','final');
@@ -113,7 +116,8 @@ CREATE TABLE progresso_aulas(
     data_conclusao DATE,
     tempo_assistido_minutos INT,
     FOREIGN KEY(aulaID) REFERENCES aulas(aulaID),
-    FOREIGN KEY(matriculaID) REFERENCES matriculas(matriculaID)
+    FOREIGN KEY(matriculaID) REFERENCES matriculas(matriculaID),
+    CONSTRAINT unica_aula_por_matricula UNIQUE (aulaID, matriculaID)
 
 );
 
@@ -123,7 +127,7 @@ RETURNS TRIGGER AS
 $$
 BEGIN
 -- aqui é veificado se foi inserida uma nota final e uma nota igual ou acima de 7.
-    IF NEW.tipo_avaliacao = 'final' AND NEW.nota >= 7 THEN
+    IF NEW.tipo_avaliacao = 'final' AND NEW.nota_prova >= 7 THEN
         UPDATE matriculas
         SET certificado_emitido = TRUE
         WHERE matriculaID = NEW.matriculaID;
