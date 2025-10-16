@@ -17,19 +17,21 @@ CREATE TABLE especialidades(
 
 CREATE TABLE instrutores(
     instrutorID SERIAL PRIMARY KEY,
+    especialidadeID INT NOT NULL,
     nome_instrutor VARCHAR(30)NOT NULL,
     sobrenome_instrutor VARCHAR(50) NOT NULL,
     email_instrutor VARCHAR(80) UNIQUE NOT NULL,
     data_cadastro DATE NOT NULL,
-    biografia VARCHAR(500)
+    biografia VARCHAR(500),
+    FOREIGN KEY(especialidadeID) REFERENCES especialidades(especialidadesID)
 );
 
 CREATE TABLE instrutor_especialidades(
     especialidadeID INT NOT NULL,
     instrutorID INT NOT NULL,
-    PRIMARY KEY(especialidadeID, instrutorID)
     FOREIGN KEY (especialidadeID) REFERENCES especialidades(especialidadeID),
-    FOREIGN KEY (instrutorID) REFERENCES instrutores(instrutorID)
+    FOREIGN KEY (instrutorID) REFERENCES instrutores(instrutorID),
+    PRIMARY KEY(especialidadeID, instrutorID)
 );
 
 CREATE TABLE categoria_cursos(
@@ -43,7 +45,7 @@ CREATE TABLE cursos(
     cursoID SERIAL PRIMARY KEY,
     categoriaID INT NOT NULL,
     instrutorID INT NOT NULL,
-    titulo_curso VARCHAR(150) NOT NULL UNIQUE,
+    titulo_curso VARCHAR(150) NOT NULL,
     carga_horaria INT NOT NULL,
     nivel_dificuldade dificuldade_enum NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
@@ -131,15 +133,16 @@ BEGIN
         UPDATE matriculas
         SET certificado_emitido = TRUE
         WHERE matriculaID = NEW.matriculaID;
-    ELSE 
-        RAISE EXCEPTION 'A nota mínima(7) não foi alcançada para emissão do certificado';
+	ELSE
+	   RAISE NOTICE 'Nota menor que 7. Certificado não emitido para a matrícula %', NEW.matriculaID;
+       
     END IF;
     RETURN NEW;
 END;
 $$ language plpgsql;
 
 
-CREATE TRIGGER atualizar_certificado
-AFTER INSERT OR UPDATE ON avaliacoes
+CREATE TRIGGER trigger_verificar_notafinal
+AFTER INSERT ON avaliacoes
 FOR EACH ROW
 EXECUTE FUNCTION verificar_notafinal();
