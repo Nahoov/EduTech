@@ -261,6 +261,6 @@ def enviar_dados_instrutor_especialidades():
             connection.commit()
             print("enviados")
 
-            
+
 
 encerra_conexao(connection)

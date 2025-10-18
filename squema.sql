@@ -23,7 +23,7 @@ CREATE TABLE instrutores(
     email_instrutor VARCHAR(80) UNIQUE NOT NULL,
     data_cadastro DATE NOT NULL,
     biografia VARCHAR(500),
-    FOREIGN KEY(especialidadeID) REFERENCES especialidades(especialidadesID)
+    FOREIGN KEY(especialidadeID) REFERENCES especialidades(especialidadeID)
 );
 
 CREATE TABLE instrutor_especialidades(

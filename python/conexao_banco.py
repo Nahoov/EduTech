@@ -37,4 +37,4 @@ def encerra_conexao(conn):
         conn.close()
     print("conexao encerrada com sucesso!")
 
-conecta()
+
