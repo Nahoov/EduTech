@@ -197,7 +197,7 @@ def gerar_matriculas(quantidade):
         data_matricula = fake.date_between(start_date = data_inicio, end_date = data_hoje)
         #data_conclusao =
         status_matricula = random.choice(['ativa','concluida','cancelada'])
-        valor_pago = fake.pyfloat(left_digits=8, right_digits=2, min_value=200, max_value=2300, positive= True)
+        valor_pago = fake.pyfloat(left_digits=8, right_digits=2, min_value=49.90, max_value= 499.90, positive= True)
         #certificado_emitido = 
         cursoID =random.choice(cursosids)
         alunoID = random.choice(alunosids)
