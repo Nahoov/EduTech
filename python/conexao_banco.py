@@ -23,7 +23,7 @@ def conecta():
             password= senha,
             host="localhost",
             port="5432",
-            database="database_edutech")
+            database="dbase_edutech")
     
         print("conectado no postgres com sucesso!!")
 

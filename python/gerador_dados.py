@@ -2,6 +2,7 @@ from conexao_banco import conecta, encerra_conexao
 from faker import Faker
 from datetime import datetime, timedelta 
 import random
+import pandas as pd
 fake = Faker(locale='pt-BR')
 
 
@@ -103,7 +104,7 @@ def gerar_alunos(quantidade):
                        VALUES (%s, %s, %s, %s, %s, %s)""",(nome_aluno, sobrenome_aluno, email, telefone, data_nascimento, data_cadastro))
         connection.commit()
         print("dados enviados com sucesso")
-
+        
 
 
 
@@ -133,7 +134,7 @@ def gerar_cursos(quantidade):
         titulo_curso = random.choice(titulo_cursos)
         carga_horaria = fake.random_int(min=2, max=50)
         nivel_dificuldade = random.choice(['iniciante','intermediario','avancado'])
-        preco = fake.pyfloat(left_digits=8, right_digits=2, min_value=200, max_value=2300, positive= True)
+        preco = fake.pyfloat(left_digits=8, right_digits=2, min_value=49.90, max_value=499.90, positive= True)
         data_criacao = fake.date_between(start_date = data_curso_criado, end_date = data_hoje)
         descricao = fake.text()
         categoriaID = random.choice(categoriasids) 
@@ -217,7 +218,7 @@ def gerar_matriculas(quantidade):
 def gerar_avaliacoes(quantidade):
     for i in range(quantidade):
         nome_prova = random.choice(['prova','teste'])
-        nota_prova = fake.random_int(min=7, max=10)
+        nota_prova = fake.random_int(min=3, max=6)
         tipo_avaliacao = random.choice(['extra','comum','final'])
         comentario = fake.text()
         data_avaliacao = fake.date_between(start_date = data_inicio, end_date = data_hoje)
@@ -263,4 +264,5 @@ def enviar_dados_instrutor_especialidades():
 
 
 
-encerra_conexao(connection)
+
+
