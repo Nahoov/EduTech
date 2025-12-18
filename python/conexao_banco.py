@@ -16,7 +16,7 @@ dotenv: Biblioteca que carrega variáveis de ambiente no arquivo .env.
 """
 
 def conecta():
-    # def para fazer conexão
+    # def para fazer conexão com o banco
     try:
         conn = psycopg2.connect(
             user="postgres",

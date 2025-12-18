@@ -8,7 +8,6 @@ fake = Faker(locale='pt-BR')
 
 data_hoje = datetime.now() 
 
-
 data_inicio = data_hoje - timedelta(days=2*365)
 
 data_curso_criado = data_hoje - timedelta(days=4*365)
@@ -52,7 +51,7 @@ titulo_modulos = ['Módulo Inicial', 'Módulo Fundamental', 'Módulo de Prática
 
 
 #(em inglês pois o pyfloat só reconhece esses parametros)
-left_digits = 8 # digitos antes da virgula
+left_digits = 8 # digitos antes do ponto
 right_digits = 2  # digitos após o ponto
 
 
@@ -92,6 +91,7 @@ formato_desejado = '## ########'
 #FUNÇÕES PARA GERAR DADOS FAKES PARA AS TABELAS
 
 def gerar_alunos(quantidade):
+
     for i in range(quantidade):
         nome_aluno = fake.first_name()
         sobrenome_aluno = fake.last_name()
@@ -111,6 +111,7 @@ def gerar_alunos(quantidade):
 
 
 def gerar_instrutores(quantidade):
+
     for i in range(quantidade):
         nome_instrutor = fake.first_name()
         sobrenome_instrutor = fake.last_name()
@@ -130,6 +131,7 @@ def gerar_instrutores(quantidade):
 
 
 def gerar_cursos(quantidade):
+
     for i in range(quantidade):
         titulo_curso = random.choice(titulo_cursos)
         carga_horaria = fake.random_int(min=2, max=50)
@@ -139,6 +141,7 @@ def gerar_cursos(quantidade):
         descricao = fake.text()
         categoriaID = random.choice(categoriasids) 
         instrutorID = random.choice(instrutoresids) 
+
         cursor.execute("""INSERT INTO cursos (titulo_curso, carga_horaria, nivel_dificuldade, preco, data_criacao, descricao, categoriaID, instrutorID)
                        VALUES(%s, %s, %s, %s, %s, %s,%s,%s)""",(titulo_curso, carga_horaria, nivel_dificuldade, preco, data_criacao, descricao, categoriaID, instrutorID))
         connection.commit()
@@ -202,6 +205,7 @@ def gerar_matriculas(quantidade):
         #certificado_emitido = 
         cursoID =random.choice(cursosids)
         alunoID = random.choice(alunosids)
+
         cursor.execute("""INSERT INTO matriculas(data_matricula, status_matricula, valor_pago, cursoID, alunoID) VALUES
                        (%s,%s,%s,%s,%s)""",(data_matricula, status_matricula, valor_pago, cursoID, alunoID))
         
@@ -224,6 +228,7 @@ def gerar_avaliacoes(quantidade):
         data_avaliacao = fake.date_between(start_date = data_inicio, end_date = data_hoje)
         matriculaID = random.choice(matriculasids)
         cursoID = random.choice(cursosids)
+
         cursor.execute("""INSERT INTO avaliacoes (nome_prova, nota_prova, tipo_avaliacao, comentario, data_avaliacao, matriculaID, cursoID)
                         VALUES(%s,%s,%s,%s,%s,%s,%s)""", (nome_prova, nota_prova, tipo_avaliacao, comentario, data_avaliacao, matriculaID, cursoID))
         connection.commit()
@@ -240,6 +245,7 @@ def gerar_progresso_aulas(quantidade):
         aulaID = random.choice(aulasids)
         matriculaID = random.choice(matriculasids)
         tempo_assistido_minutos = fake.random_int(min=5, max=90)
+        
         cursor.execute("""INSERT INTO progresso_aulas (aulaID, matriculaID, tempo_assistido_minutos)
                         VALUES (%s,%s, %s) """, (aulaID, matriculaID, tempo_assistido_minutos))
         connection.commit()
@@ -263,6 +269,34 @@ def enviar_dados_instrutor_especialidades():
             print("enviados")
 
 
+"""
+def extrair_dados_aluno(id):
+    query = "SELECT * FROM alunos WHERE alunoid = " + id
+    cursor.execute(query)
+    return cursor.fetchall()
+"""
 
+def extrair_dados_aluno(id):
+    query = "SELECT * FROM alunos WHERE alunoid = %s"
+    cursor.execute(query, (id,))
+    resultado = cursor.fetchone()
+
+    if not resultado:
+        return None
+
+    # Pega os nomes das colunas
+    colunas = [col[0] for col in cursor.description]
+
+    # Junta colunas + valores
+    aluno_dict = dict(zip(colunas, resultado))
+
+    return aluno_dict
+
+
+def delete_do_banco(id):
+    query = f"""DELETE FROM alunos WHERE alunoid = {id}"""
+    cursor.execute(query, (id,))
+
+    connection.commit()
 
 

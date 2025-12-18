@@ -17,7 +17,6 @@ CREATE TABLE especialidades(
 
 CREATE TABLE instrutores(
     instrutorID SERIAL PRIMARY KEY,
-    especialidadeID INT NOT NULL,
     nome_instrutor VARCHAR(30)NOT NULL,
     sobrenome_instrutor VARCHAR(50) NOT NULL,
     email_instrutor VARCHAR(80) UNIQUE NOT NULL,

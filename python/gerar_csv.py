@@ -25,9 +25,9 @@ def exportar_tabela_copy(table_name: str, output_path: str):
 
 
 def exportar_varias_tabelas_copy(tabelas: list, pasta_destino: str = "."):
-    """
-    Exporta várias tabelas usando COPY TO STDOUT, cada uma em arquivo separado.
-    """
+
+    #Exporta várias tabelas usando COPY TO STDOUT, cada uma em arquivo separado.
+
     os.makedirs(pasta_destino, exist_ok=True)
 
     for t in tabelas:
@@ -36,7 +36,7 @@ def exportar_varias_tabelas_copy(tabelas: list, pasta_destino: str = "."):
 
 
 
-# Lista de tabelas que você quer exportar
+# Lista de tabelas para exportar
 tabelas_para_exportar = [
     "alunos",
     "instrutores",
