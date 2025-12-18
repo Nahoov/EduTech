@@ -85,7 +85,7 @@ O diagrama serve como base para a criação e evolução do banco de dados.
 ## 🚧 Status do Projeto
 
 🚧 **Projeto em andamento**
-Ainda em desenvolvimento, com foco na consolidação da modelagem e das consultas SQL para conclusão futura.
+Ainda em desenvolvimento, com foco na criação de um arquivo python para criar um script de validação CSV.
 
 ---
 
